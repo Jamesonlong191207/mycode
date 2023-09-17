@@ -22,18 +22,19 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
-      # run shellcheck
-      - name: ShellCheck
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run ShellCheck
         uses: ludeeus/action-shellcheck@1.1.0
+
       - name: Post comment
+        if: ${{ github.event_name == 'pull_request' }}
         uses: mshick/add-pr-comment@v1
-        if: $
         with:
-            message: |
+          message: |
                - name: Lint Markdown
                 uses: tomwhross/write-good-action@v1.6
-            repo-token: $
-            repo-token-user-login: 'github-actions[bot]' # The user.login for temporary GitHub tokens
-            allow-repeats: false # This is the default
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: false
